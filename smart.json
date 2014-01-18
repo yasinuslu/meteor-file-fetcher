@@ -1,0 +1,9 @@
+{
+  "name": "file-fetcher",
+  "description": "A package for storing files from external url",
+  "homepage": "https://github.com/yasinuslu/metoer-file-fetcher",
+  "author": "Differential (http://differential.io)",
+  "version": "0.0.1",
+  "git": "https://github.com/yasinuslu/metoer-file-fetcher.git",
+  "packages": {}
+}
