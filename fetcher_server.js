@@ -3,6 +3,9 @@ var fs = Npm.require('fs');
 
 FileFetcher.handle = function (doc) {
 	var self = this;
+	if(!self.settings.server) {
+		return;
+	}
 
 	var filePath = this.settings.serverPath + "/" + doc._id + "." + doc.extension;
 

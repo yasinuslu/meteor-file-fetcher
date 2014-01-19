@@ -12,12 +12,11 @@ Package.on_use(function(api) {
   api.use(["mongo-livedata", "underscore"], both);
   api.use(["routepolicy", "webapp"], "server");
 
-  api.add_files("fetcher.js", both);
+  api.add_files("fetcher.js", "server");
 
   api.add_files("config.js", "server");
 
   api.add_files("fetcher_server.js", "server");
-  api.add_files("fetcher_client.js", "server");
 
   api.add_files("server.js", "server");
 

@@ -5,7 +5,6 @@ if(!fs.existsSync) {
 	fs.mkdirSync(FileFetcher.settings.serverPath);
 }
 
-
 RoutePolicy.declare(FileFetcher.settings.webPath, 'network');
 
 WebApp

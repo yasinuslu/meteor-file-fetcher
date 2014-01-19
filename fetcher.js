@@ -5,6 +5,14 @@ FileFetcher = {
 		handled_at: null
 	},
 
+	settings: {
+		server: false
+	},
+
+	config: function (options) {
+		_.extend(self.settings, options);
+	},
+
 	resolve: function (file) {
 		// TODO: handle url without extension
 		file.extension = file.url.split(".").pop();
