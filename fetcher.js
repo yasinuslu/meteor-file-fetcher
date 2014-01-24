@@ -5,23 +5,19 @@ FileFetcher = {
 		handled_at: null
 	},
 
-	settings: {
-		server: false
-	},
-
-	config: function (options) {
-		_.extend(self.settings, options);
-	},
-
 	resolve: function (file) {
+		if(!file.show_id) {
+			return;
+		}
 		// TODO: handle url without extension
 		file.extension = file.url.split(".").pop();
-		file.path = this.settings.webPath + "/" + file._id + "." + file.extension;
+		file.path = this.settings.webPath + "/" + file.show_id + "." + file.extension;
 
 		ExternalFiles.update(file._id, {
 			$set: {
 				extension: file.extension,
-				path: file.path
+				path: file.path,
+				handled_at: null
 			}
 		});
 	},

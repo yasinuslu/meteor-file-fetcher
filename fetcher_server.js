@@ -2,25 +2,47 @@ var http = Npm.require('http');
 var fs = Npm.require('fs');
 
 FileFetcher.handle = function (doc) {
-	var self = this;
-	if(!self.settings.server) {
-		return;
-	}
+	try {
+		var self = this;
+		if(!self.settings.server) {
+			return;
+		}
 
-	var filePath = this.settings.serverPath + "/" + doc._id + "." + doc.extension;
+		self.resolve(doc);
 
-	var file = fs.createWriteStream(filePath);
-	var cb = Meteor.bindEnvironment(function (response) {
-		response.pipe(file);
+		if(!doc.path) {
+			return;
+		}
 
+		if(doc.extension == "orgundefined") {
+			throw {
+				cause: "orgundefined extension caused by no-imdb"
+			}
+		}
+
+		var filePath = this.settings.serverRoot + doc.path;
+
+		var file = fs.createWriteStream(filePath);
+		var cb = Meteor.bindEnvironment(function (response) {
+			response.pipe(file);
+
+			ExternalFiles.update(doc._id, {
+				$set: {
+					handled_at: new Date()
+				}
+			})
+		});
+
+		var request = http.get(doc.url, cb);
+	} catch(err) {
 		ExternalFiles.update(doc._id, {
 			$set: {
-				handled_at: new Date()
+				handled_at: new Date(),
+				status: "error",
+				error: err
 			}
-		})
-	});
-
-	var request = http.get(doc.url, cb);
+		});
+	}
 }
 
 FileFetcher.unhandle = function (doc) {
@@ -29,10 +51,12 @@ FileFetcher.unhandle = function (doc) {
 
 ExternalFiles._ensureIndex({"url": 1}, {unique: true});
 
-ExternalFiles.find({
-	handled_at: null
-}).observe({
-	added: function (document) {
-		FileFetcher.handle(document);
-	}
+Meteor.startup(function () {
+	ExternalFiles.find({
+		handled_at: null
+	}).observe({
+		added: function (document) {
+			FileFetcher.handle(document);
+		}
+	});
 });

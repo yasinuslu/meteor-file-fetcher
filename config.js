@@ -7,7 +7,9 @@ var serverPath = path.join(rootDir, 'mfs');
 _.extend(FileFetcher, {
 	settings: {
 		webPath: "/mfs",
-		serverPath: serverPath
+		serverRoot: rootDir,
+		serverPath: serverPath,
+		server: false
 	},
 
 	config: function (options) {
